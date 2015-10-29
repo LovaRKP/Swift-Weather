@@ -23,7 +23,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
         // Do any additional setup after loading the view, typically from a nib.
         
         self.view.backgroundColor = UIColor.lightGrayColor()
-
+        
         Alamofire.request(.GET, "http://api.worldweatheronline.com/free/v2/weather.ashx?q=bangalore&format=json&num_of_days=5&key=01dae309de210c1d636b23f25b109").responseJSON
             { response in switch response.result {
             case .Success(let JSON):
@@ -32,10 +32,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 if let dataAray = JSON["data"] as? NSDictionary {
                     
                     if let weatherArray = dataAray["weather"] as? NSArray {
-                        
-                        print("the wather \(weatherArray)" )
-                        
-                        print("Count Of Array \(weatherArray.count)")
                         
                         self.myTableData = weatherArray
                         
@@ -50,6 +46,7 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
             case .Failure(let error):
                 print("Request failed with error: \(error)")
                 }
+        
         }
         
         
@@ -77,12 +74,8 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 forIndexPath: indexPath) as! WeatherCell
             
             cell.layer.cornerRadius = 10
-            //cell.layer.maskToBounds = true
-            
-            // Configure the cell    2015-10-15
             
             if let dateValue = self.myTableData[indexPath.row]["date"] as? NSString {
-                
                 
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yyy-MM-dd"
@@ -91,7 +84,6 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 let df = NSDateFormatter()
                 df.dateFormat = "dd"
                 let dateStr = df.stringFromDate(date!)
-                
                 cell.DateLeabel.text = "\(dateStr)"
                 
             }
@@ -100,25 +92,21 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                 
                 cell.degreeLabel.text = "\(tempratureValue)"
                 
-                
             }
             
             if let cellImage = self.myTableData[indexPath.row]["hourly"] as? NSArray {
                 
                 print("cellimage ===\(cellImage)")
                 if let celldic = cellImage[indexPath.row] as? NSDictionary {
-                    
-                    print("celldic ===\(celldic)")
+                  
                     
                     if let myValueCell = celldic["weatherIconUrl"] as? NSArray{
-                        
-                        print("my url: \(myValueCell)")
+                   
                         
                         if let myImageValueGet = myValueCell[0] as? NSDictionary {
                             
                             if let final = myImageValueGet ["value"] as? NSString {
-                                
-                                print("myImageValueGet ====\(final)")
+                          
                                 
                                 if let url = NSURL(string: final as String) {
                                     if let data = NSData(contentsOfURL: url){
@@ -131,15 +119,14 @@ class ViewController: UIViewController,UICollectionViewDataSource, UICollectionV
                         }
                     }
                     
-                }   
+                }
                 
             }
             
             return cell
             
-            
     }
-
+    
 }
 
 
